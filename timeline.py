@@ -96,3 +96,8 @@ def timeline(auth, handle):
     print 'Now inserting...'
 
     run_insert(filename)
+
+def run_timeline(auth, handle):
+    while True:
+        timeline(auth, handle)
+        time.sleep(20 * 60)

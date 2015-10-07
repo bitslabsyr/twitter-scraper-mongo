@@ -1,7 +1,7 @@
 import sys
 
 from db import init
-from timeline import timeline, run_insert
+from timeline import run_timeline
 
 AUTH = {
     'consumer_key': 'Gg7eA8iADELAcZMBdyPONRT6S',
@@ -21,7 +21,7 @@ def main(method, term):
     if method == 'init':
         init()
     elif method == 'timeline':
-        timeline(AUTH, term)
+        run_timeline(AUTH, term)
 
 if __name__ == '__main__':
     method = sys.argv[1]
