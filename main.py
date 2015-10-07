@@ -1,5 +1,6 @@
 import sys
 
+from db import init
 from timeline import timeline, run_insert
 
 AUTH = {
@@ -9,18 +10,20 @@ AUTH = {
     'access_token_secret': 'fYCEAG2RzWIzDaklHv9rgpTs0CNAXKvPA7xkpkw5XjoRe'
 }
 
-def main(scraper, term):
-    scrapers = ['timeline']
-    scraper = scraper.strip('--')
+def main(method, term):
+    methods = ['timeline', 'init']
+    method = method.strip('--')
 
-    if scraper not in scrapers:
-        print 'ERROR: Invalid scraper. Please include a valid scraper.'
+    if method not in methods:
+        print 'ERROR: Invalid method. Please include a valid method.'
         sys.exit(1)
 
-    if scraper == 'timeline':
+    if method == 'init':
+        init()
+    elif method == 'timeline':
         timeline(AUTH, term)
 
 if __name__ == '__main__':
-    scraper = sys.argv[1]
+    method = sys.argv[1]
     term = sys.argv[2]
-    main(scraper, term)
+    main(method, term)
