@@ -67,8 +67,12 @@ def timeline(auth, handle):
     api_auth.set_access_token(auth['access_token'], auth['access_token_secret'])
     api = tweepy.API(api_auth)
 
+    print 'COLLECTING FOR: {}'.format(handle)
+    print
+
     if api.verify_credentials:
         print 'Successfully authenticated with Twitter.'
+        print 'Collecting...'
     else:
         print 'Failed to authenticate with Twitter. Please try again.'
         sys.exit(1)
@@ -80,7 +84,6 @@ def timeline(auth, handle):
 
         for status in timeline:
             try:
-                print 'Tweet #{}'.format(status_count)
                 parsed_status = parse_tweet(status)
                 outfile.write(json.dumps(parsed_status).encode('utf-8'))
                 outfile.write('\n')
@@ -97,7 +100,41 @@ def timeline(auth, handle):
 
     run_insert(filename)
 
-def run_timeline(auth, handle):
+    print 'Insertion completed'
+    print
+
+def run_timeline(auth):
+    CANDIDATES_LIST = [
+        'JimWebbUSA',
+        'HillaryClinton',
+        'JoeBiden',
+        'martinomalley',
+        'BernieSanders',
+        'lincolnchafee',
+        'lessig',
+        'marcorubio',
+        'JebBush',
+        'tedcruz',
+        'ChrisChristie',
+        'ScottWalker',
+        'JohnKasich',
+        'GovMikeHuckabee',
+        'BobbyJindal',
+        'GovernorPerry',
+        'Randpaul',
+        'RealBenCarson',
+        'CarlyforAmerica',
+        'GovernorPataki',
+        'LindseyGrahamSC',
+        'ricksantorum',
+        'realdonaldtrump',
+        'gov_gilmore',
+        'markforamerica'
+    ]
+
     while True:
-        timeline(auth, handle)
+        for handle in CANDIDATES_LIST:
+            timeline(auth, handle)
+
+        print 'All candidates collected for. Resuming in 20 minutes.'
         time.sleep(20 * 60)

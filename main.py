@@ -10,7 +10,7 @@ AUTH = {
     'access_token_secret': 'fYCEAG2RzWIzDaklHv9rgpTs0CNAXKvPA7xkpkw5XjoRe'
 }
 
-def main(method, term):
+def main(method):
     methods = ['timeline', 'init']
     method = method.strip('--')
 
@@ -21,9 +21,8 @@ def main(method, term):
     if method == 'init':
         init()
     elif method == 'timeline':
-        run_timeline(AUTH, term)
+        run_timeline(AUTH)
 
 if __name__ == '__main__':
     method = sys.argv[1]
-    term = sys.argv[2]
-    main(method, term)
+    main(method)
