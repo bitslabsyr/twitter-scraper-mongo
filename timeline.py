@@ -55,7 +55,10 @@ def run_insert(filename):
     with open(filename, 'r') as infile:
         lines = infile.readlines()
         for line in lines:
-            insert_tweet_data(json.loads(line))
+            try:
+                insert_tweet_data(json.loads(line))
+            except:
+                pass
 
     os.remove(filename)
 
