@@ -55,10 +55,7 @@ def run_insert(filename):
     with open(filename, 'r') as infile:
         lines = infile.readlines()
         for line in lines:
-            try:
-                insert_tweet_data(json.loads(line))
-            except:
-                pass
+            insert_tweet_data(json.loads(line))
 
     os.remove(filename)
 
@@ -80,10 +77,12 @@ def timeline(auth, handle):
     filename = '{}-timeline.json'.format(handle)
     with open(filename, 'a') as outfile:
         timeline = tweepy.Cursor(api.user_timeline, screen_name=handle, count=200).items()
+        collecting = True
         status_count = 1
 
-        for status in timeline:
+        while collecting:
             try:
+                status = next(timeline)
                 parsed_status = parse_tweet(status)
                 outfile.write(json.dumps(parsed_status).encode('utf-8'))
                 outfile.write('\n')
@@ -92,6 +91,9 @@ def timeline(auth, handle):
             except TweepError as e:
                 print 'Received timeout. Sleeping for 15 minutes.'
                 time.sleep(15 * 60)
+
+            except StopIteration as e:
+                collecting = False
 
     print
     print 'TOTAL Tweets Collected: {}'.format(status_count)
