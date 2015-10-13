@@ -1,6 +1,7 @@
+from datetime import datetime
 from sqlalchemy.sql import select
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, \
-    ForeignKey, Boolean
+    ForeignKey, Boolean, DateTime
 
 engine = create_engine('mysql://ccds:CcdsUser@128.230.247.136/twitter', echo=True)
 metadata = MetaData()
@@ -28,7 +29,8 @@ tweets = Table('tweets', metadata,
     Column('in_reply_to_status_id', String(255)),
     Column('in_reply_to_screen_name', String(255)),
     Column('text', String(255), nullable=False),
-    Column('retweet_count', Integer, nullable=False)
+    Column('retweet_count', Integer, nullable=False),
+    Column('created_at', DateTime)
 )
 
 urls = Table('urls', metadata,
@@ -94,7 +96,10 @@ def insert_or_update_user(user, conn):
 
 def update_tweet_info(tweet, conn):
     update = tweets.update().where(tweets.c.id_str == tweet['id_str']).\
-        values(retweet_count=tweet['retweet_count'])
+        values(
+            retweet_count=tweet['retweet_count'],
+            created_at=tweet['created_at']
+        )
 
     conn.execute(update)
 
@@ -126,6 +131,7 @@ def insert_entities(entities, tweet_id, conn):
 def insert_or_update_tweet(tweet, user_id, conn):
     entities = tweet.pop('entities')
     tweet['retweet_count'] = int(tweet['retweet_count'])
+    tweet['created_at'] = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +%f %Y')
     tweet['user_id'] = user_id
 
     s = select([tweets.c.id, tweets.c.id_str]).\

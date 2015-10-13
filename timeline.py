@@ -32,6 +32,7 @@ def parse_tweet(status):
             'in_reply_to_user_id_str': status['in_reply_to_user_id_str'],
             'in_reply_to_screen_name': status['in_reply_to_screen_name'],
             'in_reply_to_status_id_str': status['in_reply_to_status_id_str'],
+            'created_at': status['created_at'],
             'entities': parse_tweet_entities(status['entities'])
         },
         'user': {
