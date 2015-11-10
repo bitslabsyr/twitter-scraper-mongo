@@ -3,7 +3,7 @@ from sqlalchemy.sql import select
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, \
     ForeignKey, Boolean, DateTime
 
-engine = create_engine('mysql://ccds:CcdsUser@128.230.247.136/twitter_dev', echo=True)
+engine = create_engine('mysql://ccds:CcdsUser@128.230.247.136/twitter', echo=True)
 metadata = MetaData()
 
 users = Table('users', metadata,
