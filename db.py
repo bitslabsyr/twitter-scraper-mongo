@@ -30,7 +30,8 @@ tweets = Table('tweets', metadata,
     Column('in_reply_to_screen_name', String(255)),
     Column('text', String(255), nullable=False),
     Column('retweet_count', Integer, nullable=False),
-    Column('created_at', DateTime)
+    Column('created_at', DateTime),
+    Column('reply_count', Integer)
 )
 
 urls = Table('urls', metadata,
@@ -98,7 +99,8 @@ def update_tweet_info(tweet, conn):
     update = tweets.update().where(tweets.c.id_str == tweet['id_str']).\
         values(
             retweet_count=tweet['retweet_count'],
-            created_at=tweet['created_at']
+            created_at=tweet['created_at'],
+            reply_count=tweet['reply_count']
         )
 
     conn.execute(update)
