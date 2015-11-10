@@ -3,7 +3,7 @@ from sqlalchemy.sql import select
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, \
     ForeignKey, Boolean, DateTime
 
-engine = create_engine('mysql://ccds:CcdsUser@localhost/twitter', echo=True)
+engine = create_engine('mysql://ccds:CcdsUser@128.230.247.136/twitter_dev', echo=True)
 metadata = MetaData()
 
 users = Table('users', metadata,
@@ -30,7 +30,8 @@ tweets = Table('tweets', metadata,
     Column('in_reply_to_screen_name', String(255)),
     Column('text', String(255), nullable=False),
     Column('retweet_count', Integer, nullable=False),
-    Column('created_at', DateTime)
+    Column('created_at', DateTime),
+    Column('reply_count', Integer)
 )
 
 urls = Table('urls', metadata,
@@ -98,7 +99,8 @@ def update_tweet_info(tweet, conn):
     update = tweets.update().where(tweets.c.id_str == tweet['id_str']).\
         values(
             retweet_count=tweet['retweet_count'],
-            created_at=tweet['created_at']
+            created_at=tweet['created_at'],
+            reply_count=tweet['reply_count']
         )
 
     conn.execute(update)
