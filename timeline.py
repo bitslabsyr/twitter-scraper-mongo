@@ -43,8 +43,8 @@ def parse_tweet(status):
             'id_str': status['user']['id_str'],
             'followers_count': status['user']['followers_count'],
             'verified': status['user']['verified'],
-            'description': status['user']['description'],
-            'statuses_count': status['user']['statuses_count'],
+	    'description': 'Hillary Clinton' if status['user']['screen_name'] == 'HillaryClinton' else status['user']['description'],
+	    'statuses_count': status['user']['statuses_count'],
             'friends_count': status['user']['friends_count'],
             'screen_name': status['user']['screen_name']
         }
