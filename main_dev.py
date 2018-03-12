@@ -20,7 +20,7 @@ def main(method):
     
 
 if __name__ == '__main__':
-    # Outfile Handling #
+    # Output Folders Handling #
     if not os.path.exists('./rawdata/original'):
         os.makedirs('./rawdata/original')
     if not os.path.exists('./rawdata/reply'):
