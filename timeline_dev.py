@@ -30,8 +30,8 @@ def run_insert(filename, type):
                 elif(type == 'reply'):
                     insert_reply_data(json.loads(line))
             except Exception as e:
-                template = "In insert(). An exception of type {0} occurred. Arguments:\n{1!r}"
-                message = template.format(e.message, e.args)
+                template = "In insert(). An exception of type {0} occurred."
+                message = template.format(str(e))
                 logging.debug(message)
                 
 def timeline(filename, handle, replies, api):
@@ -44,12 +44,12 @@ def timeline(filename, handle, replies, api):
             try:
                 status = next(timeline)
                 status = status._json
-                reply_count = None
+                status['reply_count'] = None
                 #if status['id_str'] in replies:
                 #    status['reply_count'] = replies[status['id_str']]
                 #else:
                 #    status['reply_count'] = 0
-                outfile.write(json.dumps(status).encode('utf-8'))
+                outfile.write(json.dumps(status).encode('utf-8').decode('utf-8'))
                 outfile.write('\n')
                 status_count += 1
 
@@ -59,8 +59,8 @@ def timeline(filename, handle, replies, api):
 
             except StopIteration as e:
                 collecting = False
-                template = "In timeline(). An exception of type {0} occurred. Arguments:\n{1!r}"
-                message = template.format(e.message, e.args)
+                template = "In timeline(). An exception of type {0} occurred."
+                message = template.format(str(e))
                 logging.debug(message)
 
     return status_count
@@ -102,8 +102,8 @@ def replies(filename, handle, api):
 
             except StopIteration as e:
                 collecting = False
-                template = "In replies(). An exception of type {0} occurred. Arguments:\n{1!r}"
-                message = template.format(e.message, e.args)
+                template = "In replies(). An exception of type {0} occurred."
+                message = template.format(str(e))
                 logging.debug(message)
 
     return reply_count, reply_counts_dict
@@ -153,6 +153,7 @@ def collect(auth, handle):
 
 
 def run_timeline(auth):
+        
     CANDIDATES_LIST = ['JeffHemsley','profjsg']
     
     while True:

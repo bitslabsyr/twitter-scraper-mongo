@@ -25,7 +25,7 @@ def insert_tweet_data(tweet):
         
         tweet['created_at'] = utc.localize(datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +%f %Y'))
         tweet['updated_at'] = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
-        tweet['text'] = tweet['text'].encode('utf-8')
+        tweet['text'] = tweet['text']
         
         isExist = mongoDB.TW_cand.find_one({'id': docId})
         if isExist is None:
@@ -42,8 +42,8 @@ def insert_tweet_data(tweet):
                                    upsert=True, multi=False) 
         
     except Exception as e:
-        template = "In insert_tweet_data(). 1 An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(e.message, e.args)
+        template = "In insert_tweet_data(). An exception of type {0} occurred."
+        message = template.format(str(e))
         logging.debug(message)
 
 def insert_reply_data(tweet):
@@ -53,7 +53,7 @@ def insert_reply_data(tweet):
         
         tweet['created_at'] = utc.localize(datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +%f %Y'))
         tweet['updated_at'] = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
-        tweet['text'] = tweet['text'].encode('utf-8')
+        tweet['text'] = tweet['text']
         
         isExist = mongoDB.TW_reply.find_one({'id': docId})
         if isExist is None:
@@ -69,8 +69,8 @@ def insert_reply_data(tweet):
                                    upsert=True, multi=False) 
         
     except Exception as e:
-        template = "In insert_reply_data(). 2 An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(e.message, e.args)
+        template = "In insert_reply_data(). An exception of type {0} occurred."
+        message = template.format(str(e))
         logging.debug(message)          
 
 def insert_candidate_data(tweet):
@@ -102,8 +102,8 @@ def insert_candidate_data(tweet):
                                    upsert=True, multi=False) 
         
     except Exception as e:
-        template = "In insert_candidate_data(). 3 An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(e.message, e.args)
+        template = "In insert_candidate_data(). An exception of type {0} occurred."
+        message = template.format(str(e))
         logging.debug(message)
             
 def insert_tweet_log(tweet):
@@ -127,8 +127,8 @@ def insert_tweet_log(tweet):
         mongoDB.TW_cand_crawl_history.insert(log_data)
         
     except Exception as e:
-        template = "In insert_tweet_log(). 4 An exception of type {0} occurred. Arguments:\n{1!r}"
-        message = template.format(e.message, e.args)
+        template = "In insert_tweet_log(). An exception of type {0} occurred."
+        message = template.format(str(e))
         logging.debug(message)   
         
      
