@@ -34,7 +34,6 @@ def insert_tweet_data(tweet):
             mongoDB.TW_cand.update( { 'id': docId },
                                    { '$set': {'updated_at': tweet['updated_at'],
                                               'retweet_count': tweet['retweet_count'],
-                                              'reply_count': tweet['reply_count'],
                                               'favorite_count': tweet['favorite_count'],
                                               'user.followers_count': tweet['user']['followers_count'],
                                               'user.listed_count': tweet['user']['listed_count'],
@@ -114,7 +113,6 @@ def insert_tweet_log(tweet):
         log_data = {}
         log_data['tweet_id'] = tweet['id']
         log_data['retweet_count'] = tweet['retweet_count']
-        log_data['reply_count'] = tweet['reply_count']
         log_data['favorite_count'] = tweet['favorite_count']
         
         log_data['user'] = {}
