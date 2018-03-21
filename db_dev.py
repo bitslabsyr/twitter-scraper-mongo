@@ -24,7 +24,7 @@ def insert_tweet_data(tweet):
         docId = tweet['id']
         
         tweet['created_at'] = utc.localize(datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +%f %Y'))
-        tweet['updated_at'] = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        tweet['updated_at'] = datetime.utcnow()
         tweet['text'] = tweet['text']
         
         isExist = mongoDB.TW_cand.find_one({'id': docId})
@@ -51,7 +51,7 @@ def insert_reply_data(tweet):
         docId = tweet['id']
         
         tweet['created_at'] = utc.localize(datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +%f %Y'))
-        tweet['updated_at'] = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        tweet['updated_at'] = datetime.utcnow()
         tweet['text'] = tweet['text']
         
         isExist = mongoDB.TW_reply.find_one({'id': docId})
@@ -87,7 +87,7 @@ def insert_candidate_data(tweet):
         cand['friends_count'] = tweet['user']['friends_count']
         cand['created_at'] = utc.localize(datetime.strptime(tweet['user']['created_at'], '%a %b %d %H:%M:%S +%f %Y'))
         
-        cand['updated_at'] = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        cand['updated_at'] = datetime.utcnow()
         
         isExist = mongoDB.TW_cand_info.find_one({'id': candId})
         if isExist is None:
@@ -120,7 +120,7 @@ def insert_tweet_log(tweet):
         log_data['user']['friends_count'] = tweet['user']['friends_count']        
         log_data['user']['listed_count'] = tweet['user']['listed_count']
      
-        log_data['log_created_at'] = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        log_data['log_created_at'] = datetime.utcnow()
         
         mongoDB.TW_cand_crawl_history.insert(log_data)
         
