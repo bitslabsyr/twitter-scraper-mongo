@@ -165,7 +165,7 @@ def collect(auth, handle):
 
 def run_timeline(auth):
         
-    CANDIDATES_LIST = ['muooomoo', 'JeffHemsley', 'profjsg']
+    CANDIDATES_LIST = cfg.CANDIDATES_LIST
     
     while True:
         for handle in CANDIDATES_LIST:

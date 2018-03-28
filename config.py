@@ -13,4 +13,7 @@ AUTH = {
     'access_token_secret': 'xxx'
 }
 
+# Format: date(YYYY, M, D, Hour, Min)
 COLLECT_FROM = datetime(2016, 1, 1, 0, 0)
+
+CANDIDATES_LIST = ['muooomoo', 'JeffHemsley', 'profjsg']
