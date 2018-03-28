@@ -8,6 +8,7 @@ import tweepy
 import csv
 import logging
 
+import config as cfg
 from datetime import datetime, timedelta
 from pytz import timezone
 from tweepy.error import TweepError
@@ -36,8 +37,11 @@ def run_insert(filename, type):
                 
 def timeline(filename, handle, replies, api):
     status_count = 0
+    
     with open(filename, 'a') as outfile:
-        timeline = tweepy.Cursor(api.user_timeline, screen_name=handle, count=200).items()
+        timeline = tweepy.Cursor(api.user_timeline, 
+                                 screen_name=handle, 
+                                 count=200).items()
         collecting = True
 
         while collecting:
@@ -45,17 +49,24 @@ def timeline(filename, handle, replies, api):
                 status = next(timeline)
                 status = status._json
                 status['reply_count'] = None
-                #if status['id_str'] in replies:
-                #    status['reply_count'] = replies[status['id_str']]
-                #else:
-                #    status['reply_count'] = 0
                 outfile.write(json.dumps(status).encode('utf-8').decode('utf-8'))
                 outfile.write('\n')
                 status_count += 1
+                
+                created_at = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +%f %Y')
+                if created_at < cfg.COLLECT_FROM:
+                    collecting = False
+                    break
+                
 
             except TweepError as e:
-                print('Received timeout. Sleeping for 15 minutes.')
-                time.sleep(15 * 60)
+                if e.reason == 'Twitter error response: status code = 404':
+                    print('Error: Username %s not found' % (handle))
+                    logging.debug('Error: Username %s not found' % (handle))
+                    collecting = False
+                else:
+                    print('Received timeout. Sleeping for 15 minutes.')
+                    time.sleep(15 * 60)
 
             except StopIteration as e:
                 collecting = False
@@ -154,7 +165,7 @@ def collect(auth, handle):
 
 def run_timeline(auth):
         
-    CANDIDATES_LIST = ['JeffHemsley','profjsg']
+    CANDIDATES_LIST = ['muooomoo', 'JeffHemsley', 'profjsg']
     
     while True:
         for handle in CANDIDATES_LIST:
