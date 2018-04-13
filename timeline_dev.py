@@ -41,7 +41,7 @@ def timeline(filename, handle, replies, api):
     with open(filename, 'a') as outfile:
         timeline = tweepy.Cursor(api.user_timeline, 
                                  screen_name=handle, 
-                                 count=200).items()
+                                 count=200,tweet_mode='extended').items()
         collecting = True
 
         while collecting:
