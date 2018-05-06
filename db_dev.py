@@ -25,7 +25,7 @@ def insert_tweet_data(tweet):
         
         tweet['created_at'] = utc.localize(datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S +%f %Y'))
         tweet['updated_at'] = datetime.utcnow()
-        tweet['text'] = tweet['text']
+        tweet['text'] = tweet['full_text']
         
         isExist = mongoDB.TW_cand.find_one({'id': docId})
         if isExist is None:
