@@ -18,7 +18,7 @@ AUTH = {
     'access_token_secret': 'XXX'
 }
 
-# Format: date(YYYY, M, D, Hour, Min)
+# Format: date(YYYY, M, D, Hour, Min). If no date restriction desired, replace with False
 COLLECT_FROM = datetime(2016, 1, 1, 0, 0)
 
 CANDIDATES_LIST = ['handle', 'handle', 'handle']
