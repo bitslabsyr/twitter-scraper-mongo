@@ -13,11 +13,10 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from tweepy.error import TweepError
 from tweepy.parsers import JSONParser
-from db_dev import insert_tweet_data
-from db_dev import insert_candidate_data
-from db_dev import insert_tweet_log
-from db_dev import insert_reply_data
-
+from db import insert_tweet_data
+from db import insert_candidate_data
+from db import insert_tweet_log
+from db import insert_reply_data
 
 def run_insert(filename, type):
     with open(filename, 'r') as infile:
@@ -54,10 +53,9 @@ def timeline(filename, handle, replies, api):
                 status_count += 1
                 
                 created_at = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +%f %Y')
-                if cfg.COLLECT_FROM:
-                    if created_at < cfg.COLLECT_FROM:
-                        collecting = False
-                        break
+                if created_at < cfg.COLLECT_FROM:
+                    collecting = False
+                    break
                 
 
             except TweepError as e:

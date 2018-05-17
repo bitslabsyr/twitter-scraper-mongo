@@ -5,7 +5,7 @@ if not os.path.exists('./logs'):
     os.makedirs('./logs')
          
 import config as cfg
-from timeline_dev import run_timeline
+from timeline import run_timeline
 
 
 def main(method):
