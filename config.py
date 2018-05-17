@@ -1,19 +1,24 @@
 #!/usr/bin/env python
 from datetime import  datetime
 
-MONGO_ACCOUNT = {'username': 'xxx',
-                 'password': 'xxx'}
+# address: server address e.g. localhost and bangkok.ischool.syr.edu
+# auth: True if MongoDB authentication is enabled. If True, username and password must be given
+MONGO_ACCOUNT = {'address': 'localhost',
+                 'auth': True,
+                 'username': 'USERNAME',
+                 'password': 'PASSWORD'}
+
 
 DB_NAME = 'TestimelineCollection'
 
 AUTH = {
-    'consumer_key': 'xxx',
-    'consumer_secret': 'xxx',
-    'access_token': 'xxx',
-    'access_token_secret': 'xxx'
+    'consumer_key': 'XXX',
+    'consumer_secret': 'XXX',
+    'access_token': 'XXX',
+    'access_token_secret': 'XXX'
 }
 
 # Format: date(YYYY, M, D, Hour, Min)
 COLLECT_FROM = datetime(2016, 1, 1, 0, 0)
 
-CANDIDATES_LIST = ['muooomoo', 'JeffHemsley', 'profjsg']
+CANDIDATES_LIST = ['handle', 'handle', 'handle']

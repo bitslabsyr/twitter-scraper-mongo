@@ -12,8 +12,12 @@ from email.utils import parsedate_tz
 from datetime import datetime
 from collections import Counter
 
-mongoClient = pymongo.MongoClient()
-mongoClient.admin.authenticate(cfg.MONGO_ACCOUNT['username'], cfg.MONGO_ACCOUNT['password'])
+
+mongoClient = pymongo.MongoClient(cfg.MONGO_ACCOUNT['address'])
+
+if cfg.MONGO_ACCOUNT['auth']:
+    mongoClient.admin.authenticate(cfg.MONGO_ACCOUNT['username'], cfg.MONGO_ACCOUNT['password'])
+
 mongoDB = mongoClient[cfg.DB_NAME]
 
 logging.basicConfig(format='%(asctime)s %(message)s',
