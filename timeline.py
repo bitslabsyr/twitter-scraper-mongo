@@ -54,9 +54,10 @@ def timeline(filename, handle, replies, api):
                 status_count += 1
                 
                 created_at = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +%f %Y')
-                if created_at < cfg.COLLECT_FROM:
-                    collecting = False
-                    break
+                if cfg.COLLECT_FROM:
+                    if created_at < cfg.COLLECT_FROM:
+                        collecting = False
+                        break
                 
 
             except TweepError as e:
