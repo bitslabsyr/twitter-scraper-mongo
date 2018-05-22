@@ -1,0 +1,6 @@
+DB_NAME=xxx
+CONSUMER_KEY=xxx
+CONSUMER_SECRET=xxx
+ACCESS_TOKEN=xxx
+ACCESS_TOKEN_SECRET=xxx
+TERMS_LIST=handle,handle,handle

@@ -18,8 +18,6 @@ mongoClient = pymongo.MongoClient(cfg.MONGO_ACCOUNT['address'])
 if cfg.MONGO_ACCOUNT['auth']:
     mongoClient.admin.authenticate(cfg.MONGO_ACCOUNT['username'], cfg.MONGO_ACCOUNT['password'])
 
-mongoDB = mongoClient[cfg.DB_NAME]
-
 logging.basicConfig(format='%(asctime)s %(message)s',
                     filename='./logs/twitter-scraper.log',
                     level=logging.DEBUG)
@@ -29,7 +27,9 @@ def to_datetime(datestring):
     dt = datetime(*time_tuple[:6])
     return dt
 
-def insert_tweet_data(tweet):
+def insert_tweet_data(tweet, db_name):
+    mongoDB = mongoClient[db_name]
+    
     try:
         utc = timezone('UTC')
         docId = tweet['id']
@@ -118,7 +118,8 @@ def insert_tweet_data(tweet):
         message = template.format(str(e))
         logging.debug(message)
 
-def insert_reply_data(tweet):
+def insert_reply_data(tweet, db_name):
+    mongoDB = mongoClient[db_name]
     try:
         utc = timezone('UTC')
         docId = tweet['id']
@@ -145,7 +146,8 @@ def insert_reply_data(tweet):
         message = template.format(str(e))
         logging.debug(message)          
 
-def insert_candidate_data(tweet):
+def insert_candidate_data(tweet, db_name):
+    mongoDB = mongoClient[db_name]
     try:
         utc = timezone('UTC')
         
@@ -178,7 +180,8 @@ def insert_candidate_data(tweet):
         message = template.format(str(e))
         logging.debug(message)
             
-def insert_tweet_log(tweet):
+def insert_tweet_log(tweet, db_name):
+    mongoDB = mongoClient[db_name]
     try:
         utc = timezone('UTC')
         docId = tweet['id']

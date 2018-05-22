@@ -18,17 +18,17 @@ from db import insert_candidate_data
 from db import insert_tweet_log
 from db import insert_reply_data
 
-def run_insert(filename, type):
+def run_insert(filename, db_name, type='tweet'):
     with open(filename, 'r') as infile:
         lines = infile.readlines()
         for line in lines:
             try:
                 if(type == 'tweet'):
-                    insert_tweet_data(json.loads(line))
-                    insert_candidate_data(json.loads(line))
-                    insert_tweet_log(json.loads(line))
+                    insert_tweet_data(json.loads(line), db_name)
+                    insert_candidate_data(json.loads(line), db_name)
+                    insert_tweet_log(json.loads(line), db_name)
                 elif(type == 'reply'):
-                    insert_reply_data(json.loads(line))
+                    insert_reply_data(json.loads(line), db_name)
             except Exception as e:
                 template = "In insert(). An exception of type {0} occurred."
                 message = template.format(str(e))
@@ -118,10 +118,10 @@ def replies(filename, handle, api):
 
     return reply_count, reply_counts_dict
 
-def collect(auth, handle):
+def collect(params, handle):
     
-    api_auth = tweepy.OAuthHandler(auth['consumer_key'], auth['consumer_secret'])
-    api_auth.set_access_token(auth['access_token'], auth['access_token_secret'])
+    api_auth = tweepy.OAuthHandler(params['CONSUMER_KEY'], params['CONSUMER_SECRET'])
+    api_auth.set_access_token(params['ACCESS_TOKEN'], params['ACCESS_TOKEN_SECRET'])
     api = tweepy.API(api_auth)
 
     print('COLLECTING FOR: {}'.format(handle))
@@ -157,18 +157,38 @@ def collect(auth, handle):
     print('')
 
     print('Now inserting...')
-    run_insert(filename, 'tweet')
+    run_insert(filename, params['DB_NAME'])
     print('Insertion completed')
     print('')
 
 
-def run_timeline(auth):
-        
-    CANDIDATES_LIST = cfg.CANDIDATES_LIST
+def run_timeline(input_filename):
+    d = {}
+    try:
+        with open(input_filename) as f:
+            for line in f:
+                try:
+                    (key, val) = line.split('=')
+                    d[key] = val.strip()
+                except:
+                    pass
+    except:
+        print('Error: \"%s\" cannot be opened' % (input_filename))
+        sys.exit(1)
     
+    if 'DB_NAME' not in d.keys() or 'CONSUMER_KEY' not in d.keys() or 'CONSUMER_SECRET' not in d.keys() or 'ACCESS_TOKEN' not in d.keys() or 'ACCESS_TOKEN_SECRET' not in d.keys() or 'TERMS_LIST' not in d.keys():
+        print('Error: Missing information in \"%s\":\n - DB_NAME\n - CONSUMER_SECRET\n - ACCESS_TOKEN\n - ACCESS_TOKEN_SECRET\n - TERMS_LIST' % (input_filename))
+        sys.exit(1)
+    
+    # Output Folders Handling #
+    if not os.path.exists('./rawdata/' + d['DB_NAME']):
+        os.makedirs('./rawdata/' + d['DB_NAME'])
+    
+    TERMS_LIST = d['TERMS_LIST']
+    TERMS_LIST = TERMS_LIST.split(',')
     while True:
-        for handle in CANDIDATES_LIST:
-            collect(auth, handle)
+        for handle in TERMS_LIST:
+            collect(d, handle.strip())
 
         print('All candidates were collected. Resuming in an hour.')
         time.sleep(60 * 60)
