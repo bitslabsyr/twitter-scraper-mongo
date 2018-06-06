@@ -59,10 +59,15 @@ def timeline(filename, handle, replies, api):
                 
 
             except TweepError as e:
+                print(e.reason)
                 if e.reason == 'Twitter error response: status code = 404':
                     print('Error: Username %s not found' % (handle))
                     logging.debug('Error: Username %s not found' % (handle))
                     collecting = False
+                elif e.reason == '{"errors":[{"code":89,"message":"Invalid or expired token."}]}':
+                    print('Error: Invalid or expired token.')
+                    collecting = False
+                    sys.exit(0)
                 else:
                     print('Received timeout. Sleeping for 15 minutes.')
                     time.sleep(15 * 60)
@@ -118,12 +123,12 @@ def replies(filename, handle, api):
 
     return reply_count, reply_counts_dict
 
-def collect(params, handle):
+def collect(params, handle, db_name):
     
     api_auth = tweepy.OAuthHandler(params['CONSUMER_KEY'], params['CONSUMER_SECRET'])
     api_auth.set_access_token(params['ACCESS_TOKEN'], params['ACCESS_TOKEN_SECRET'])
     api = tweepy.API(api_auth)
-
+    
     print('COLLECTING FOR: {}'.format(handle))
     print()
 
@@ -136,7 +141,7 @@ def collect(params, handle):
     reply_counts_dict = []
     reply_count = None
     
-    filename = './rawdata/reply/reply-{}-{}.json'.format(handle, datetime.utcnow().strftime("%Y%m%d%H"))
+    #filename = './rawdata/reply/reply-{}-{}.json'.format(handle, datetime.utcnow().strftime("%Y%m%d%H"))
 
     #print('Collecting replies...')
     #reply_count, reply_counts_dict = replies(filename, handle, api)
@@ -148,7 +153,7 @@ def collect(params, handle):
     #print('Insertion completed')
     #print('')
         
-    filename = './rawdata/original/original-{}-{}.json'.format(handle, datetime.utcnow().strftime("%Y%m%d%H"))
+    filename = './rawdata/{}/original-{}-{}.json'.format(db_name, handle, datetime.utcnow().strftime("%Y%m%d%H"))
 
     print('Collecting {}\'s timeline'.format(handle))
     status_count = timeline(filename, handle, reply_counts_dict, api)
@@ -157,7 +162,7 @@ def collect(params, handle):
     print('')
 
     print('Now inserting...')
-    run_insert(filename, params['DB_NAME'])
+    run_insert(filename, db_name)
     print('Insertion completed')
     print('')
 
@@ -180,15 +185,21 @@ def run_timeline(input_filename):
         print('Error: Missing information in \"%s\":\n - DB_NAME\n - CONSUMER_SECRET\n - ACCESS_TOKEN\n - ACCESS_TOKEN_SECRET\n - TERMS_LIST' % (input_filename))
         sys.exit(1)
     
+    db_name = ''.join(e for e in d['DB_NAME'] if e.isalnum())
+    twitter_keys = {'CONSUMER_KEY': ''.join(e for e in d['CONSUMER_KEY'] if e.isalnum()),
+                    'CONSUMER_SECRET': ''.join(e for e in d['CONSUMER_SECRET'] if e.isalnum()),
+                    'ACCESS_TOKEN': ''.join(e for e in d['ACCESS_TOKEN'] if e.isalnum() or e == '-'),
+                    'ACCESS_TOKEN_SECRET': ''.join(e for e in d['ACCESS_TOKEN_SECRET'] if e.isalnum())
+                    }
     # Output Folders Handling #
-    if not os.path.exists('./rawdata/' + d['DB_NAME']):
-        os.makedirs('./rawdata/' + d['DB_NAME'])
+    if not os.path.exists('./rawdata/' + db_name):
+        os.makedirs('./rawdata/' + db_name)
     
     TERMS_LIST = d['TERMS_LIST']
     TERMS_LIST = TERMS_LIST.split(',')
     while True:
         for handle in TERMS_LIST:
-            collect(d, handle.strip())
+            collect(twitter_keys, handle.strip(), db_name)
 
         print('All candidates were collected. Resuming in an hour.')
         time.sleep(60 * 60)
