@@ -3,4 +3,4 @@ CONSUMER_KEY=xxx
 CONSUMER_SECRET=xxx
 ACCESS_TOKEN=xxx
 ACCESS_TOKEN_SECRET=xxx
-TERMS_LIST=handle,handle,handle
+TERMS_LIST=handle1,handel2,handle3/,handle4

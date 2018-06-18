@@ -199,8 +199,9 @@ def run_timeline(input_filename):
     TERMS_LIST = TERMS_LIST.split(',')
     while True:
         for handle in TERMS_LIST:
-            collect(twitter_keys, handle.strip(), db_name)
+            collect(twitter_keys, handle.strip(' /'), db_name)
 
         print('All candidates were collected. Resuming in an hour.')
         time.sleep(60 * 60)
+
 
