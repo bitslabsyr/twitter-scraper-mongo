@@ -1,6 +1,6 @@
 # BITS Lab Twitter Scraper Mongo
 
-This package fetches Twitter timelines for a specified set of Twitter users. It writes data obtained from Twitter to a Mongo database.  
+This package fetches Twitter timelines for a specified set of Twitter users. It writes data obtained from Twitter to a Mongo database. After collecting all timelines for specified users, the code begins again after waiting 1 hour. 
 
 This package creates 3 collections inside the Mongo database:
 1) TW_cand:  
