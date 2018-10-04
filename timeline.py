@@ -68,6 +68,10 @@ def timeline(filename, handle, replies, api):
                     print('Error: Invalid or expired token.')
                     collecting = False
                     sys.exit(0)
+                elif e.reason == 'Twitter error response: status code = 401':
+                    print('Error: Username %s is private or suspended' % (handle))
+                    logging.debug('Error: Username %s is private or suspended' % (handle))
+                    collecting = False
                 else:
                     print('Received timeout. Sleeping for 15 minutes.')
                     time.sleep(15 * 60)
