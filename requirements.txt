@@ -4,4 +4,4 @@ requests-oauthlib==0.5.0
 six==1.9.0
 SQLAlchemy==1.0.8
 tweepy==3.4.0
-wheel==0.24.0
+wheel==0.38.1
